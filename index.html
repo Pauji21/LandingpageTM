@@ -1,0 +1,392 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>News Post</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+      <style>
+          body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              line-height: 1.6;
+              margin: 0;
+              padding: 20px;
+              background: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 100%);
+              min-height: 100vh;
+          }
+          .header {
+              display: flex;
+              align-items: center;
+              padding: 20px;
+              background-color: white;
+              border-radius: 12px;
+              margin-bottom: 20px;
+              box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+              max-width: 800px;
+              margin: 0 auto 20px auto;
+          }
+          .header img {
+              width: 80px;
+              height: 80px;
+              margin-right: 20px;
+          }
+          .header h1 {
+              color: #2c3e50;
+              margin: 0;
+          }
+          .news-container {
+              max-width: 800px;
+              margin: 0 auto;
+              background-color: white;
+              padding: 20px;
+              border-radius: 12px;
+              box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+              transform: translateY(0);
+              transition: transform 0.3s ease, box-shadow 0.3s ease;
+              animation: fadeIn 1s ease-in;
+              border-bottom: 4px solid #007bff;
+          }
+          .news-container:hover {
+              transform: translateY(-5px);
+              box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+          }
+          .news-image {
+              width: 180px;
+              height: 180px;
+              object-fit: cover;
+              float: left;
+              margin-right: 20px;
+              margin-bottom: 10px;
+              border-radius: 8px;
+              transition: transform 0.3s ease;
+              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+          }
+          .news-image:hover {
+              transform: scale(1.05);
+          }
+          .news-title {
+              font-size: 28px;
+              color: #2c3e50;
+              margin-bottom: 10px;
+              position: relative;
+              padding-bottom: 10px;
+          }
+          .news-title::after {
+              content: '';
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              width: 60px;
+              height: 3px;
+              background: linear-gradient(90deg, #007bff, #00c6ff);
+              transition: width 0.3s ease;
+          }
+          .news-title:hover::after {
+              width: 100px;
+          }
+          .news-meta {
+              font-size: 14px;
+              color: #666;
+              margin-bottom: 15px;
+              animation: slideIn 0.5s ease;
+          }
+          .news-content {
+              color: #444;
+              text-align: justify;
+              line-height: 1.8;
+          }
+          .news-content p {
+              animation: fadeIn 0.5s ease;
+          }
+          .gallery-section {
+              margin-top: 30px;
+              border-top: 2px solid #eee;
+              padding-top: 20px;
+              clear: both;
+          }
+          .gallery-grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+              gap: 20px;
+              margin-top: 20px;
+          }
+          .gallery-item {
+              position: relative;
+              overflow: hidden;
+              border-radius: 8px;
+              box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+              transition: transform 0.3s ease;
+          }
+          .gallery-item:hover {
+              transform: scale(1.05);
+          }
+          .gallery-item img {
+              width: 100%;
+              height: 200px;
+              object-fit: cover;
+              display: block;
+          }
+          .gallery-caption {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              background: rgba(0,0,0,0.7);
+              color: white;
+              padding: 8px;
+              font-size: 14px;
+              opacity: 0;
+              transition: opacity 0.3s ease;
+          }
+          .gallery-item:hover .gallery-caption {
+              opacity: 1;
+          }
+          .comments-section {
+              margin-top: 30px;
+              border-top: 2px solid #eee;
+              padding-top: 20px;
+              clear: both;
+          }
+          .comment-form {
+              margin-bottom: 20px;
+              animation: slideUp 0.5s ease;
+          }
+          .comment-input {
+              width: calc(100% - 24px);
+              padding: 12px;
+              margin-bottom: 10px;
+              border: 2px solid #ddd;
+              border-radius: 8px;
+              transition: border-color 0.3s ease, box-shadow 0.3s ease;
+              resize: vertical;
+          }
+          .comment-input:focus {
+              border-color: #007bff;
+              box-shadow: 0 0 8px rgba(0,123,255,0.2);
+              outline: none;
+          }
+          .comment-button {
+              background: linear-gradient(45deg, #007bff, #00c6ff);
+              color: white;
+              border: none;
+              padding: 12px 24px;
+              border-radius: 25px;
+              cursor: pointer;
+              transition: transform 0.2s ease, box-shadow 0.2s ease;
+              font-weight: bold;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+          }
+          .comment-button:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+          }
+          .comment-button:active {
+              transform: translateY(0);
+          }
+          .comments-list {
+              list-style: none;
+              padding: 0;
+              margin: 0;
+          }
+          .comment-item {
+              padding: 15px;
+              border-bottom: 1px solid #eee;
+              transition: background-color 0.3s ease;
+              animation: slideIn 0.5s ease;
+          }
+          .comment-item:hover {
+              background-color: #f8f9fa;
+          }
+          .comment-author {
+              font-weight: bold;
+              color: #2c3e50;
+              margin-bottom: 5px;
+          }
+          .comment-time {
+              font-size: 12px;
+              color: #666;
+              margin-bottom: 8px;
+          }
+          .comment-text {
+              color: #444;
+              line-height: 1.6;
+          }
+          .footer {
+              max-width: 800px;
+              margin: 20px auto 0;
+              padding: 20px;
+              background-color: white;
+              border-radius: 12px;
+              box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+              text-align: center;
+          }
+          .social-icons {
+              margin-top: 15px;
+          }
+          .social-icons a {
+              color: #2c3e50;
+              font-size: 24px;
+              margin: 0 10px;
+              transition: color 0.3s ease;
+              text-decoration: none;
+          }
+          .social-icons a:hover {
+              color: #007bff;
+          }
+
+          @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+          }
+
+          @keyframes slideIn {
+              from {
+                  opacity: 0;
+                  transform: translateX(-20px);
+              }
+              to {
+                  opacity: 1;
+                  transform: translateX(0);
+              }
+          }
+
+          @keyframes slideUp {
+              from {
+                  opacity: 0;
+                  transform: translateY(20px);
+              }
+              to {
+                  opacity: 1;
+                  transform: translateY(0);
+              }
+          }
+      </style>
+  </head>
+  <body>
+      <header class="header">
+          <img src="images/Lambang-UM.png" alt="PMII Logo">
+          <h1>PMII Rayon Tan Malaka</h1>
+      </header>
+
+      <div class="news-container">
+          <img src="images/follow up.jpg" alt="News Image" class="news-image">
+          <h1 class="news-title">Breaking News Title</h1>
+          <div class="news-meta">
+              <span>Published: January 1, 2024</span>
+              <span> | </span>
+              <span>Author: John Doe</span>
+          </div>
+          <div class="news-content">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+              <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+          </div>
+        
+          <div class="gallery-section">
+              <h3>Dokumentasi Kegiatan</h3>
+              <div class="gallery-grid">
+                  <div class="gallery-item">
+                      <img src="images/follow up.jpg" alt="Dokumentasi 1">
+                      <div class="gallery-caption">Kegiatan 1</div>
+                  </div>
+                  <div class="gallery-item">
+                      <img src="images/follow up.jpg" alt="Dokumentasi 2">
+                      <div class="gallery-caption">Kegiatan 2</div>
+                  </div>
+                  <div class="gallery-item">
+                      <img src="images/follow up.jpg" alt="Dokumentasi 3">
+                      <div class="gallery-caption">Kegiatan 3</div>
+                  </div>
+                  <div class="gallery-item">
+                      <img src="images/follow up.jpg" alt="Dokumentasi 4">
+                      <div class="gallery-caption">Kegiatan 4</div>
+                  </div>
+                  <div class="gallery-item">
+                    <img src="images/follow up.jpg" alt="Dokumentasi 4">
+                    <div class="gallery-caption">Kegiatan 4</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/follow up.jpg" alt="Dokumentasi 4">
+                    <div class="gallery-caption">Kegiatan 4</div>
+                </div>
+              </div>
+          </div>
+
+          <div class="comments-section">
+              <h3>Comments</h3>
+              <div class="comment-form">
+                  <textarea class="comment-input" placeholder="Write your comment here..." rows="3"></textarea>
+                  <button class="comment-button" onclick="postComment()">Post Comment</button>
+              </div>
+              <ul id="comments-list" class="comments-list">
+                  <!-- Comments will be added here dynamically -->
+              </ul>
+          </div>
+      </div>
+
+      <footer class="footer">
+          <div class="social-icons">
+              <a href="https://facebook.com/pmiirayontanmalaka" target="_blank"><i class="fab fa-facebook"></i></a>
+              <a href="https://twitter.com/pmiirayontanmalaka" target="_blank"><i class="fab fa-twitter"></i></a>
+              <a href="https://instagram.com/pmiirayontanmalaka" target="_blank"><i class="fab fa-instagram"></i></a>
+              <a href="https://youtube.com/pmiirayontanmalaka" target="_blank"><i class="fab fa-youtube"></i></a>
+          </div>
+      </footer>
+
+      <script>
+          // Load comments when page loads
+          window.onload = function() {
+              loadComments();
+          };
+
+          function loadComments() {
+              const savedComments = JSON.parse(localStorage.getItem('comments')) || [];
+              const commentsList = document.getElementById('comments-list');
+              commentsList.innerHTML = '';
+              
+              savedComments.forEach(comment => {
+                  const commentItem = document.createElement('li');
+                  commentItem.className = 'comment-item';
+                  commentItem.innerHTML = `
+                      <div class="comment-author">${comment.author}</div>
+                      <div class="comment-time">${comment.time}</div>
+                      <div class="comment-text">${comment.text}</div>
+                  `;
+                  commentsList.appendChild(commentItem);
+              });
+          }
+
+          function postComment() {
+              const commentInput = document.querySelector('.comment-input');
+              const commentText = commentInput.value.trim();
+              
+              if (commentText !== '') {
+                  const now = new Date();
+                  const timeString = now.toLocaleTimeString();
+                  
+                  const newComment = {
+                      author: 'Anonymous',
+                      time: timeString,
+                      text: commentText
+                  };
+
+                  // Get existing comments
+                  let comments = JSON.parse(localStorage.getItem('comments')) || [];
+                  
+                  // Add new comment
+                  comments.unshift(newComment);
+                  
+                  // Save to localStorage
+                  localStorage.setItem('comments', JSON.stringify(comments));
+                  
+                  // Clear input
+                  commentInput.value = '';
+                  
+                  // Reload comments
+                  loadComments();
+              }
+          }
+      </script>
+  </body>
+  </html>
